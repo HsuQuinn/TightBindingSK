@@ -44,7 +44,11 @@ kdict = Dict(
 )
 # diag and plot
 @show H = Hamiltonian.gen_ham_k(G, lattice, atoms, interactions, cutoff)
-evals = Hamiltonian.SolveHk(kdict, lattice, atoms, interactions, cutoff)
+evals,evecs = Hamiltonian.SolveHk(kdict, lattice, atoms, interactions, cutoff)
 Draw.plot_bandstructre(kdict,evals,"chinook")
 Draw.plot_contour(kdict, lattice,atoms,interactions,cutoff, [-1,1], [-1,1],"chinook", index=1)
+opdict = Dict(
+    "orbital"   =>  "pz" 
+)
+Draw.plot_orbital_projection(kdict,atoms,evals,evecs,opdict)
 end

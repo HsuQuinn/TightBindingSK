@@ -78,11 +78,13 @@ end
 function SolveHk(kdict, lattice, atoms, interactions, cutoff::Float64)
     kpath, _ = Klib.gen_K(kdict)
     eigenvalues = []
+    eigenstates = []
     for k in kpath
         Hk = gen_ham_k(k, lattice, atoms, interactions, cutoff::Float64)
-        evals = eigen(Hk).values
+        evals, evecs = eigen(Hk)
         push!(eigenvalues, evals)
+        push!(eigenstates, evecs)
     end
-    return eigenvalues
+    return eigenvalues, eigenstates
 end
 end # module Hamiltonian

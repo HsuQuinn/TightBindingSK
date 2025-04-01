@@ -35,7 +35,11 @@ kdict = Dict(
     "rvec"      =>  b_matrix
 )
 # diag and plot
-@show H = Hamiltonian.gen_ham_k(Γ, lattice, atoms, interactions, cutoff)
-evals = Hamiltonian.SolveHk(kdict, lattice, atoms, interactions, cutoff)
+evals, evecs = Hamiltonian.SolveHk(kdict, lattice, atoms, interactions, cutoff)
 Draw.plot_bandstructre(kdict,evals,"graphene_4orb")
+# orbital projection
+opdict = Dict(
+    "orbital"   =>  "py" 
+)
+Draw.plot_orbital_projection(kdict,atoms,evals,evecs,opdict)
 end

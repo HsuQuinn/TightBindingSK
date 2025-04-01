@@ -36,6 +36,11 @@ kdict = Dict(
 )
 
 # diag and plot
-evals = Hamiltonian.SolveHk(kdict, lattice, atoms, interactions, cutoff)
+evals,evecs = Hamiltonian.SolveHk(kdict, lattice, atoms, interactions, cutoff)
 Draw.plot_bandstructre(kdict,evals,"ssh")
+# orbital projection
+opdict = Dict(
+    "orbital"   =>  "s" 
+)
+Draw.plot_orbital_projection(kdict,atoms,evals,evecs,opdict)
 end

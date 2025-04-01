@@ -1,8 +1,32 @@
 module Draw
 include("hamilton.jl")
 include("klib.jl")
-using LinearAlgebra, Plots
+using LinearAlgebra, Plots, Colors, ColorSchemes, PyPlot
 using .Klib, .Hamiltonian
+
+cdict = Dict(
+    "red" => [
+        (0.0,   1.0, 1.0),   # 0~0.5：白 → 深蓝（红通道从1降到0.0）
+        (0.5,   0.0, 0.0),   
+        (1.0,   0.0, 0.0)    # 0.5~1.0：深蓝（红通道保持0）
+    ],
+    "green" => [
+        (0.0,   1.0, 1.0),   # 0~0.5：白 → 深蓝（绿通道从1降到0.0）
+        (0.5,   0.0, 0.0),   
+        (1.0,   0.0, 0.0)    # 0.5~1.0：深蓝（绿通道保持0）
+    ],
+    "blue" => [
+        (0.0,   1.0, 1.0),   # 0~0.5：白 → 深蓝（蓝通道从1保持1）
+        (0.5,   1.0, 1.0),   
+        (1.0,   0.5, 0.5)    # 0.5~1.0：深蓝（蓝通道从1降到0.5）
+    ],
+    "alpha" => [
+        (0.0,   0.0, 0.0),   # 透明度从0（完全透明）
+        (0.5,   0.5, 0.5),   # 渐变到0.5（半透明）
+        (1.0,   1.0, 1.0)    # 到1（完全不透明）
+    ]
+)
+cmap_bwr = matplotlib.colors.LinearSegmentedColormap("TransparentWhiteToDeepBlue", cdict)
 
 function plot_bandstructre(kdict,evals,filename)
     kpath, kdist = Klib.gen_K(kdict)
@@ -16,19 +40,65 @@ function plot_bandstructre(kdict,evals,filename)
             push!(bands[i], real(eval[i]))
         end
     end
-
-    plot(kdist, bands[1], label="Band 1", xlabel="k-path:$label_string", ylabel="Energy (eV)", lw=2)
-    for i in 2:num_bands
-        plot!(kdist, bands[i], label="Band $i", lw=2)
+    for i in 1:num_bands
+        PyPlot.plot(kdist, bands[i], label="Band $i", linewidth=1.5)
     end
-
     xticks = [0.0]
     for i in 2:length(kdict["pts"])
         push!(xticks, kdist[(i - 1) * kdict["grid"]])
     end
-    vline!(xticks, label="", lw=1, lc=:black, ls=:dash)
-    savefig("band_$filename.png")
+    for x in xticks
+        PyPlot.axvline(x=x, color="black", linestyle="--", linewidth=0.8)
+    end
+    PyPlot.xlabel("k-path: $label_string")
+    PyPlot.ylabel("Energy (eV)")
+    PyPlot.title("Band Structure")
+    PyPlot.legend()
+    PyPlot.tight_layout()
+    PyPlot.savefig("band_$filename.png")
+    PyPlot.close()
 end
+
+function plot_orbital_projection(kdict,atoms,evals,evecs,opdict)
+    orbs = []
+    op = opdict["orbital"]
+    _orb_index = 1
+    for atom in atoms
+        for orb in atom.orbitals
+            if orb == op
+                push!(orbs, _orb_index)
+            end
+            _orb_index = _orb_index + 1
+        end
+    end
+    label_string = join(kdict["labels"], "->")
+    kpath, kdist = Klib.gen_K(kdict)
+    num_bands = length(evals[1])  
+    num_kpoints = length(kpath)  
+    bands = [Float64[] for _ in 1:num_bands]
+    weights = [Float64[] for _ in 1:num_bands]
+    for k_index in 1:num_kpoints
+        eval = evals[k_index]
+        evec = evecs[k_index]
+        for i in 1:num_bands
+            push!(bands[i], real(eval[i]))
+            push!(weights[i], sum(abs2.(vec(evec[orbs, i]))))          
+        end
+    end
+    for i in 1:num_bands
+        PyPlot.scatter(kdist, bands[i], c=weights[i], cmap=cmap_bwr, s=10, edgecolors="none", norm=matplotlib.colors.Normalize(vmin=0, vmax=1))
+    end
+    for i in 1:num_bands
+        PyPlot.plot(kdist, bands[i], label="Band $i", color="grey", linewidth=1.0, alpha=0.8)  
+    end
+    colorbar(label="Orbital Weight")
+    xlabel("k-path: $label_string")
+    ylabel("Energy (eV)")
+    title("Orbital Projection: $op")
+    PyPlot.savefig("$op orbital projection.png")
+    close()
+end
+
 
 function plot_contour(kdict::Dict, lattice,atoms,interactions,cutoff,xrange,yrange,filename; index=1)
     e = []
@@ -46,8 +116,8 @@ function plot_contour(kdict::Dict, lattice,atoms,interactions,cutoff,xrange,yran
         end
     end
     e_matrix = reshape(e, (40,40))
-    fig2 = contourf(x_vals, y_vals, e_matrix, levels=10, color=:viridis)
+    fig2 = Plots.contourf(x_vals, y_vals, e_matrix, levels=10, color=:viridis)
     title!("Energy contour plot")
-    savefig("contour_$filename.png")
+    Plots.savefig("contour_$filename.png")
 end
 end

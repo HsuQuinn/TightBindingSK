@@ -32,7 +32,7 @@ kdict = Dict(
     "rvec"      =>  b_matrix
 )
 # diag and plot
-evals = Hamiltonian.SolveHk(kdict, lattice, atoms, interactions, cutoff)
+evals,evecs = Hamiltonian.SolveHk(kdict, lattice, atoms, interactions, cutoff)
 Draw.plot_bandstructre(kdict, evals,"graphene")
 Draw.plot_contour(kdict, lattice,atoms,interactions,cutoff, [-1,1], [-1,1],"graphene", index=2)
 end
