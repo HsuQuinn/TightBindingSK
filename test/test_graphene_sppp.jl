@@ -39,7 +39,7 @@ evals, evecs = Hamiltonian.SolveHk(kdict, lattice, atoms, interactions, cutoff)
 Draw.plot_bandstructre(kdict,evals,"graphene_4orb")
 # orbital projection
 opdict = Dict(
-    "orbital"   =>  "py" 
+    "orbital"   =>  "pz" 
 )
 Draw.plot_orbital_projection(kdict,atoms,evals,evecs,opdict)
 end

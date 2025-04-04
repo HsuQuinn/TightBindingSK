@@ -68,7 +68,11 @@ This project is licensed under the MIT License.
 
 ## TODO List
 Planned updates for future versions:
-1. Implement orbital projection.
+1. I̶m̶p̶l̶e̶m̶e̶n̶t̶ ̶o̶r̶b̶i̶t̶a̶l̶ ̶p̶r̶o̶j̶e̶c̶t̶i̶o̶n̶.
 2. Add Spin-Orbit Coupling (SOC).
 3. Include next-nearest-neighbor interactions.
 4. Simulate ARPES (Angle-Resolved Photoemission Spectroscopy).
+5. R-gauge(now is r-gauge).
+6. respense function(eg. NLO).
+7. Add different interactions, now all is "ii", which means only one type element in u.c.. (PRI)
+
