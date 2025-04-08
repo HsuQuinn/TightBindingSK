@@ -59,16 +59,12 @@ function plot_bandstructre(kdict,evals,filename)
     PyPlot.close()
 end
 
-function plot_orbital_projection(kdict,atoms,evals,evecs,opdict)
+function plot_orbital_projection(kdict, basis,evals,evecs,opdict,filename)
     orbs = []
     op = opdict["orbital"]
-    _orb_index = 1
-    for atom in atoms
-        for orb in atom.orbitals
-            if orb == op
-                push!(orbs, _orb_index)
-            end
-            _orb_index = _orb_index + 1
+    for (i,b) in enumerate(basis)
+        if b.orbital == op 
+            push!(orbs,i)
         end
     end
     label_string = join(kdict["labels"], "->")
@@ -95,13 +91,14 @@ function plot_orbital_projection(kdict,atoms,evals,evecs,opdict)
     xlabel("k-path: $label_string")
     ylabel("Energy (eV)")
     title("Orbital Projection: $op")
-    PyPlot.savefig("$op orbital projection.png")
+    PyPlot.savefig("$op orbital projection_$filename.png")
     close()
 end
 
 
-function plot_contour(kdict::Dict, lattice,atoms,interactions,cutoff,xrange,yrange,filename; index=1)
+function plot_contour(kdict::Dict, rdict , xrange,yrange,filename; index=1)
     e = []
+    basis = Hamiltonian.gen_basis(rdict) 
     rvec = kdict["rvec"]
     b1, b2, b3 = rvec[:,1], rvec[:,2], rvec[:,3]
     x_vals = range(xrange[1], xrange[2], length=40)
@@ -110,7 +107,7 @@ function plot_contour(kdict::Dict, lattice,atoms,interactions,cutoff,xrange,yran
         for j in y_vals
             k_frac = [i, j, 0]
             k = k_frac[1] * b1 + k_frac[2] * b2 + k_frac[3] * b3 
-            Hk = Hamiltonian.gen_ham_k(k, lattice, atoms, interactions, cutoff)
+            Hk = Hamiltonian.gen_hamk(k, rdict, basis)
             evals = real(eigen(Hk).values)
             push!(e, evals[index])
         end

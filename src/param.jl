@@ -5,6 +5,34 @@ using LinearAlgebra
 """
 Get hopping integrals for tight-binding models.
 """
+function hsoc(o1,o2,s1,s2)
+    if o1 == "px" && s1 == "up" && o2 == "py" && s2 == "up"
+        return -1.0im
+    elseif o1 == "px" && s1 == "up" && o2 == "pz" && s2 == "down"
+        return 1.0
+    elseif o1 == "px" && s1 == "down" && o2 == "py" && s2 == "down"
+        return 1.0im 
+    elseif o1 == "px" && s1 == "down" && o2 == "pz" && s2 == "up"
+        return -1.0
+    elseif o1 == "py" && s1 == "up" && o2 == "px" && s2 == "up"
+        return 1.0im 
+    elseif o1 == "py" && s1 == "up" && o2 == "pz" && s2 == "down"
+        return -1.0im 
+    elseif o1 == "py" && s1 == "down" && o2 == "px" && s2 == "down"
+        return -1.0im 
+    elseif o1 == "py" && s1 == "down" && o2 == "pz" && s2 == "up"
+        return -1.0im
+    elseif o1 == "pz" && s1 == "up" && o2 == "px" && s2 == "down"
+        return -1.0
+    elseif o1 == "pz" && s1 == "up" && o2 == "py" && s2 == "down"
+        return 1.0im 
+    elseif o1 == "pz" && s1 == "down" && o2 == "px" && s2 == "up"
+        return 1.0
+    elseif o1 == "pz" && s1 == "down" && o2 == "py" && s2 == "up"
+        return 1.0im 
+    end
+    return 0
+end
 
 function onsite(orbtype, interactions)
     e_s = get(interactions["i"], "e_s", 0.0)

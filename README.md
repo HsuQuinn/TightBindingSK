@@ -69,10 +69,9 @@ This project is licensed under the MIT License.
 ## TODO List
 Planned updates for future versions:
 1. I̶m̶p̶l̶e̶m̶e̶n̶t̶ ̶o̶r̶b̶i̶t̶a̶l̶ ̶p̶r̶o̶j̶e̶c̶t̶i̶o̶n̶.
-2. Add Spin-Orbit Coupling (SOC).
-3. Include next-nearest-neighbor interactions.
-4. Simulate ARPES (Angle-Resolved Photoemission Spectroscopy).
-5. R-gauge(now is r-gauge).
-6. respense function(eg. NLO).
-7. Add different interactions, now all is "ii", which means only one type element in u.c.. (PRI)
+2. A̶d̶d̶ ̶S̶p̶i̶n̶-̶O̶r̶b̶i̶t̶ ̶C̶o̶u̶p̶l̶i̶n̶g̶ ̶(̶S̶O̶C̶)̶.̶
+3. Simulate ARPES (Angle-Resolved Photoemission Spectroscopy).
+4. R̶-̶g̶a̶u̶g̶e̶(̶n̶o̶w̶ ̶i̶s̶ ̶r̶-̶g̶a̶u̶g̶e̶)̶.̶(̶D̶E̶L̶)̶
+5. respense function(eg. NLO).
+6. Add different interactions, now all is "ii", which means only one type element in u.c.. (PRI)
 
